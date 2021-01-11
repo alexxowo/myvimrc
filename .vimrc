@@ -1,153 +1,164 @@
-set nocompatible
-set nolist
-set rnu
-
-"inoremap " ""<left>
-""inoremap ' ''<left>
-""""inoremap ( ()<left>
-""inoremap [ []<left>
-""inoremap { {}<left>
-""inoremap {<CR> {<CR>}<ESC>O
-""inoremap {;<CR> {<CR>};<ESC>0
-
-set tabstop=4
-
-" desabling swap files
-set noswapfile
-"set mouse=a active wrap
-set wrap
-
-set hlsearch
+syntax on
+set rnu " Relative Number Line "
+set nolist " I dont have idea for this :v"
+set noerrorbells
+set nocompatible 
+set wrap " Set wrap "
+set tabstop=4 " Tab size"
+set shiftwidth=4 " Shiftwidth"
+set smarttab
+set mouse=a " Active Mouse"
+set noswapfile " Dont Create swap file"
+set nobackup
 set incsearch
 set cpoptions+=x
-
-set noerrorbells
-set visualbell
-
-" show mode and command
-set showmode
-set showcmd
-
-" t matching pairs of brackets. Use the '%' character to jump between them.
+set number " Show Number line"
+set showmode " Show mode"
+set showcmd " Show command"
+set cmdheight=4 " Command windows height size"
 set matchpairs+=<:>
-
-" Show line numbers
-set number
-
-" map buffers FZF
-noremap <C-b> :buffers<CR>
-" switching between buffers
-noremap <C-Up> :bnext<CR>
-noremap <C-Down> :bprev<CR>
-
-" Enable mouse scrolling
-set mouse=a
-map <ScrollWheelUp> <K>
-map <ScrollWheelDown> <J>
-
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
 set ttyfast
+set termguicolors
+set t_Co=256
 
-let mapleader = ','
-
-" Map NERDTreeToggle
-map <C-n> :NERDTreeToggle<CR>
-" map Ctrl q to save
-nnoremap <leader>ss :w<CR>
-" Exit map
-nnoremap <leader>qq :q!<CR>
-
-" moving beetwen tabs:
- ""noremap <C-Left> :tabprevious<CR>
- ""noremap <C-Right> :tabnext<CR>
-nnoremap <leader>tk :tabnew<CR>
-nnoremap <leader>tc :tabclose<CR>
-
-" remap Ctrl F to :Files command
-noremap <silent> <C-f> :Files<CR>
-
-filetype indent on
 filetype plugin indent on
-
-" List of plugins to install
-call plug#begin()
-
-	Plug 'junegunn/fzf.vim'
-	Plug 'dikiaap/minimalist'
-	Plug 'vim-airline/vim-airline'
-	Plug 'vim-airline/vim-airline-themes'
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-	Plug 'davidhalter/jedi-vim'
-	Plug 'majutsushi/tagbar'
-	Plug 'joshdick/onedark.vim'
-	Plug 'preservim/nerdtree'
-	Plug 'dense-analysis/ale'
-	Plug 'pangloss/vim-javascript'
-	Plug 'leafgarland/typescript-vim'
-
-call plug#end()
-
-set omnifunc=htmlcomplete#CompleteTags
-
-
-" config tagbar
-nmap <F8> :TagbarToggle<CR>
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Give more space for displaying messages.
-set cmdheight=4
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-
-" GoTo code navigation.
+let mapleader = ','
+" Go To code na
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-" Use tab for trigger completion with characters ahead and navigate.
-" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" " other plugin before putting this into your config.
-inoremap <silent><expr> <C-TAB>
+
+nmap <leader>k :wincmd h<CR>
+nmap <leader>l :wincmd j<CR>
+
+"Use tab for trigger completion with characters ahead and navigate.
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<C-TAB>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.
 if has('nvim')
-   inoremap <silent><expr> <c-space> coc#refresh()
+  inoremap <silent><expr> <c-space> coc#refresh()
 else
-     inoremap <silent><expr> <c-@> coc#refresh()
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-let g:airline_theme='onedark'
+" Save
+nnoremap <leader>ss :w!<CR> 
+" Exit
+nnoremap <leader>qq :q!<CR>
+" Save and Exit
+nnoremap <leader>sq :wq!<CR>
+" Tabs Config - Close tab
+noremap <leader>tc :tabclose<CR>
+" move between buffers
+noremap <C-Right> :bnext!<CR>
+noremap <C-Left> :bprev!<CR>
+" Close Actual buff and save if not saved
+command! CloseBuff :call s:closeBuffer()
+noremap <C-q> :CloseBuff<CR>
+" Remap CTRL F to Files
+noremap <silent> <C-f> :Files<CR>
+
+call plug#begin('~/.config/nvim/plugged')
+	" Airline plug	
+	Plug 'vim-airline/vim-airline'
+	Plug 'vim-airline/vim-airline-themes'
+	" Themes
+	Plug 'joshdick/onedark.vim'
+	Plug 'dracula/vim'
+	Plug 'morhetz/gruvbox'
+	" FZF
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+	Plug 'junegunn/fzf.vim'	
+	" NERDTree
+	Plug 'scrooloose/nerdtree'
+	Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+	" Productive plugins
+	Plug 'Yggdroot/indentLine'
+	Plug 'jiangmiao/auto-pairs'	
+	" Jedi VIM
+	Plug 'davidhalter/jedi-vim'
+	" Conquer of Completion (COC)
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+		
+	" JavaScript and TypeScript support
+	Plug 'pangloss/vim-javascript'
+	Plug 'leafgarland/typescript-vim'	
+call plug#end()
+
+colorscheme dracula
+
+" jevi vim config
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#auto_initialization = 0
+
+" COC Plugins
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-phpls', 'coc-pyright']
+
+" Vim Airline status config
+let g:airline_theme = 'dracula'
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#formatter = 'jsformatter'
 
-set t_Co=256
-syntax on
-colorscheme onedark
+" Don't show indent line
+let g:indentLine_fileTypeExclude = ['text', 'sh', 'help', 'terminal']
+let g:indentLine_bufNameExclude = ['NERD_tree.*', 'term:.*']
 
-" One Dark theme configure
-let g:onedark_terminal_italics=1 
+" Open NERDTree with CTRL N
+map <C-n> :NERDTreeToggle<CR>
+vmap ++ <plug>NERDCommenterToggle
+nmap ++ <plug>NERDCommenterToggle
 
-" use 24 bit true color in VIM
-if(empty($TMUX))
-	if(has("nvin"))
-		let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+let NERDTreeMinimalUI=1
+let NERDTreeShowLineNumbers=1
+let NERDTreeDirArrows=1
+
+let g:NERDTreeGitStatusWithFlags = 1
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:NERDTreeGitStatusNodeColorization = 1
+"let g:NERDTreeColorMapCustom = {
+    "Staged"    : "#0ee375",  
+    "Modified"  : "#d9bf91",  
+    "Renamed"   : "#51C9FC",  
+    "Untracked" : "#FCE77C",  
+    "Unmerged"  : "#FC51E6",  
+    "Dirty"     : "#FFBD61",  
+    "Clean"     : "#87939A",   
+    "Ignored"   : "#808080"   
+"}   
+
+" NERDTree Highlight
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+
+" Functions
+" Function for COC,move with tab
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Close Buffer and save if not saved
+function! s:closeBuffer()	
+	let state = &mod
+	if (state == 1)
+		echo 'File is modified... Saving.'
+		w!	
+		bd!
+	else
+		echo 'Closing current buffer'	
+		bd!
 	endif
-
-	if(has("termguicolors"))
-		set termguicolors
-	endif
-endif
+endfunction
